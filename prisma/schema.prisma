@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Blog {
+  id                String   @id @default(cuid())
+  name              String
+  url               String
+  secretEmail       String
+  niche             String
+  smtpSettings      SMTPSettings? @relation(fields: [smtpSettingsId], references: [id])
+  smtpSettingsId    String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model SMTPSettings {
+  id          String   @id @default(cuid())
+  email       String
+  appPassword String
+  blogs       Blog[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
